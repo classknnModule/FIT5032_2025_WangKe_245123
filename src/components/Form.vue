@@ -46,11 +46,19 @@
 
             <div class="col-6">
               <label for="gender" class="form-label">Gender</label>
-              <select class="form-select" id="gender" v-model="formData.gender">
+              <select
+                class="form-select"
+                id="gender"
+                v-model="formData.gender"
+                @blur="() => validateGender(true)"
+                @change="() => validateGender(false)"
+              >
+                <option value="">Please select gender</option>
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
+              <div v-if="errors.gender" class="text-danger">{{ errors.gender }}</div>
             </div>
           </div>
 
@@ -61,7 +69,10 @@
               id="reason"
               rows="3"
               v-model="formData.reason"
+              @blur="() => validateReason(true)"
+              @input="() => validateReason(false)"
             ></textarea>
+            <div v-if="errors.reason" class="text-danger">{{ errors.reason }}</div>
           </div>
 
           <div class="text-center">
@@ -111,9 +122,33 @@ const submittedCards = ref([])
 const submitForm = () => {
   validateName(true)
   validatePassword(true)
-  if (!errors.value.username && !errors.value.password) {
+  validateGender(true)
+  validateReason(true)
+
+  if (
+    !errors.value.username &&
+    !errors.value.password &&
+    !errors.value.gender &&
+    !errors.value.reason
+  ) {
     submittedCards.value.push({ ...formData.value })
     clearForm()
+  }
+}
+
+const clearForm = () => {
+  formData.value = {
+    username: '',
+    password: '',
+    isAustralian: false,
+    reason: '',
+    gender: '',
+  }
+  errors.value = {
+    username: null,
+    password: null,
+    gender: null,
+    reason: null,
   }
 }
 
@@ -155,7 +190,25 @@ const validatePassword = (blur) => {
     errors.value.password = null
   }
 }
-const validateGender = (bluer) => {}
+
+const validateGender = (blur) => {
+  if (!formData.value.gender) {
+    if (blur) errors.value.gender = 'Please select a gender'
+  } else {
+    errors.value.gender = null
+  }
+}
+
+const validateReason = (blur) => {
+  const reason = formData.value.reason.trim()
+  if (!reason) {
+    if (blur) errors.value.reason = 'Please provide a reason for joining'
+  } else if (reason.length < 10) {
+    if (blur) errors.value.reason = 'Reason must be at least 10 characters long'
+  } else {
+    errors.value.reason = null
+  }
+}
 </script>
 
 <style scoped>
