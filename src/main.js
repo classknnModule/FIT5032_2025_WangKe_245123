@@ -14,5 +14,5 @@ app.use(PrimeVue, {
     preset: Aura,
   },
 })
-createApp(App).mount('#app')
+app.mount('#app')
 // createApp(JSON).mount('#app')

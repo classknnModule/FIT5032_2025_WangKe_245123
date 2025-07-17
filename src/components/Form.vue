@@ -83,31 +83,21 @@
       </div>
     </div>
   </div>
-  <div class="row mt-5" v-if="submittedCards.length">
-    <div class="d-flex flex-wrap justify-content-center">
-      <div
-        v-for="(card, index) in submittedCards"
-        :key="index"
-        class="card m-2"
-        style="width: 18rem"
-      >
-        <div class="card-header">User Information</div>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item">Username: {{ card.username }}</li>
-          <li class="list-group-item">Password: {{ card.password }}</li>
-          <li class="list-group-item">
-            Australian Resident: {{ card.isAustralian ? 'Yes' : 'No' }}
-          </li>
-          <li class="list-group-item">Gender: {{ card.gender }}</li>
-          <li class="list-group-item">Reason: {{ card.reason }}</li>
-        </ul>
-      </div>
-    </div>
-  </div>
+  <DataTable :value="submittedCards" v-if="submittedCards.length" tableStyle="min-width: 50rem">
+    <Column field="username" header="Username" />
+    <Column field="password" header="Password" />
+    <Column field="isAustralian" header="Australian Resident" />
+    <Column field="gender" header="Gender" />
+    <Column field="reason" header="Reason" />
+  </DataTable>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import DataTable from 'primevue/datatable'
+import Column from 'primevue/column'
+import ColumnGroup from 'primevue/columngroup'
+import Row from 'primevue/row'
 
 const formData = ref({
   username: '',
@@ -147,6 +137,7 @@ const clearForm = () => {
   errors.value = {
     username: null,
     password: null,
+    isAustralian: null,
     gender: null,
     reason: null,
   }
