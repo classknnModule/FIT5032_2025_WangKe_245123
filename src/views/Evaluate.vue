@@ -11,11 +11,11 @@
     <div class="user-rating">
       <p>Please evaluate our score：</p>
       <div class="stars">
-        <span 
-          v-for="star in 5" 
-          :key="star" 
-          class="star" 
-          :class="{ filled: star <= userScore }" 
+        <span
+          v-for="star in 5"
+          :key="star"
+          class="star"
+          :class="{ filled: star <= userScore }"
           @click="setRating(star)"
           @mouseover="hoverRating = star"
           @mouseleave="hoverRating = 0"
@@ -35,7 +35,6 @@ import { ref, computed, onMounted } from 'vue'
 
 const STORAGE_KEY = 'user-ratings'
 
-// 读取本地缓存
 function loadRatingsFromStorage() {
   const data = localStorage.getItem(STORAGE_KEY)
   return data ? JSON.parse(data) : []
@@ -56,7 +55,6 @@ function setRating(star) {
   submitted.value = false
 }
 
-// 计算平均评分
 const averageScore = computed(() => {
   if (ratings.value.length === 0) return 0
   const sum = ratings.value.reduce((a, b) => a + b, 0)
@@ -72,7 +70,6 @@ function submitRating() {
   }
 }
 
-// 页面加载时重新加载数据（可选）
 onMounted(() => {
   ratings.value = loadRatingsFromStorage()
 })
