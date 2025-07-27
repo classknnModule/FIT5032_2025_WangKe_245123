@@ -1,4 +1,4 @@
-# FIT5032-week2
+# FIT5032
 
 This template should help get you started developing with Vue 3 in Vite.
 
