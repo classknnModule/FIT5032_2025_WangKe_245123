@@ -2,9 +2,9 @@
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h1>Library App Login</h1>
+        <h1>Login</h1>
       </div>
-      
+
       <form @submit.prevent="handleLogin" class="login-form">
         <!-- User Type Selection -->
         <div class="form-group">
@@ -20,7 +20,7 @@
             <option value="admin">Administrator</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label for="username">Username</label>
           <input
@@ -33,7 +33,7 @@
             class="form-input"
           />
         </div>
-        
+
         <div class="form-group">
           <label for="password">Password</label>
           <input
@@ -46,34 +46,30 @@
             class="form-input"
           />
         </div>
-        
+
         <div v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-        
+
         <div v-if="successMessage" class="success-message">
           {{ successMessage }}
         </div>
-        
-        <button 
-          type="submit" 
-          :disabled="isLoading || !isFormValid"
-          class="login-button"
-        >
+
+        <button type="submit" :disabled="isLoading || !isFormValid" class="login-button">
           <span v-if="isLoading">Logging in...</span>
           <span v-else>Login</span>
         </button>
       </form>
-      
+
       <div class="demo-credentials" v-if="registeredUsers.length === 0">
         <h3>Demo Credentials</h3>
-        
+
         <div class="credential-group">
           <h4>Regular User (Librarian)</h4>
           <p><strong>Username:</strong> librarian</p>
           <p><strong>Password:</strong> Books123!</p>
         </div>
-        
+
         <div class="credential-group">
           <h4>Administrator</h4>
           <p><strong>Username:</strong> admin</p>
@@ -92,36 +88,32 @@ export default {
   name: 'LoginView',
   setup() {
     const router = useRouter()
-    
 
     const credentials = ref({
       username: '',
       password: '',
-      userType: ''
+      userType: '',
     })
-    
+
     const errorMessage = ref('')
     const successMessage = ref('')
     const isLoading = ref(false)
     const registeredUsers = ref([])
-    
 
     const DEFAULT_ADMIN = {
       username: 'admin',
       password: '12345678',
       gender: 'admin',
       isAustralian: true,
-      reason: 'System Administrator'
+      reason: 'System Administrator',
     }
-    
 
     const authState = inject('authState', null)
-    
 
     onMounted(() => {
       loadRegisteredUsers()
     })
-    
+
     const loadRegisteredUsers = () => {
       try {
         const stored = localStorage.getItem('submittedCards')
@@ -132,13 +124,10 @@ export default {
         console.error('Error loading registered users:', error)
       }
     }
-    
 
     const isFormValid = computed(() => {
-      return credentials.value.username.trim() !== '' && 
-             credentials.value.password.trim() !== ''
+      return credentials.value.username.trim() !== '' && credentials.value.password.trim() !== ''
     })
-    
 
     const clearMessages = () => {
       setTimeout(() => {
@@ -146,76 +135,73 @@ export default {
         successMessage.value = ''
       }, 3000)
     }
-    
 
     const validateCredentials = (username, password) => {
-
-      const registeredUser = registeredUsers.value.find(user => 
-        user.username === username && user.password === password
+      const registeredUser = registeredUsers.value.find(
+        (user) => user.username === username && user.password === password,
       )
-      
+
       if (registeredUser) {
         return { isValid: true, user: registeredUser }
       }
-      
 
       if (username === DEFAULT_ADMIN.username && password === DEFAULT_ADMIN.password) {
         return { isValid: true, user: DEFAULT_ADMIN }
       }
-      
+
       return { isValid: false, user: null }
     }
-    
 
     const handleLogin = async () => {
-
       errorMessage.value = ''
       successMessage.value = ''
       isLoading.value = true
-      
+
       try {
-
         loadRegisteredUsers()
-        
 
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
+        await new Promise((resolve) => setTimeout(resolve, 1000))
 
-        const validation = validateCredentials(credentials.value.username, credentials.value.password)
-        
+        const validation = validateCredentials(
+          credentials.value.username,
+          credentials.value.password,
+        )
+
         if (validation.isValid) {
-
           if (authState) {
             authState.isAuthenticated.value = true
             authState.user.value = {
               username: validation.user.username,
               gender: validation.user.gender,
               isAustralian: validation.user.isAustralian,
-              reason: validation.user.reason
+              reason: validation.user.reason,
             }
           } else {
-
             localStorage.setItem('isAuthenticated', 'true')
-            localStorage.setItem('currentUser', JSON.stringify({
-              username: validation.user.username,
-              gender: validation.user.gender,
-              isAustralian: validation.user.isAustralian,
-              reason: validation.user.reason
-            }))
+            localStorage.setItem(
+              'currentUser',
+              JSON.stringify({
+                username: validation.user.username,
+                gender: validation.user.gender,
+                isAustralian: validation.user.isAustralian,
+                reason: validation.user.reason,
+              }),
+            )
           }
-          
+
           successMessage.value = 'Login successful! Redirecting...'
-          
+
           setTimeout(() => {
             const redirectTo = router.currentRoute.value.query.redirect || '/about'
             router.push(redirectTo)
           }, 1500)
-          
         } else {
           if (registeredUsers.value.length === 0) {
-            errorMessage.value = 'Invalid credentials. Try the demo credentials below or register first.'
+            errorMessage.value =
+              'Invalid credentials. Try the demo credentials below or register first.'
           } else {
-            errorMessage.value = 'Invalid username or password. Please check your credentials or register first.'
+            errorMessage.value =
+              'Invalid username or password. Please check your credentials or register first.'
           }
           clearMessages()
         }
@@ -226,7 +212,6 @@ export default {
         isLoading.value = false
       }
     }
-    
 
     const clearForm = () => {
       credentials.value.username = ''
@@ -234,7 +219,7 @@ export default {
       errorMessage.value = ''
       successMessage.value = ''
     }
-    
+
     return {
       credentials,
       errorMessage,
@@ -243,9 +228,9 @@ export default {
       isFormValid,
       registeredUsers,
       handleLogin,
-      clearForm
+      clearForm,
     }
-  }
+  },
 }
 </script>
 
@@ -417,7 +402,7 @@ export default {
   background-color: #e8f4f8;
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #2196F3;
+  border-left: 4px solid #2196f3;
 }
 
 .registered-users h3 {
@@ -442,22 +427,22 @@ export default {
   border-bottom: none;
 }
 
-
 @media (max-width: 480px) {
   .login-container {
     padding: 10px;
   }
-  
+
   .login-card {
     padding: 1.5rem;
   }
-  
+
   .login-header h1 {
     font-size: 1.5rem;
   }
 }
 
-.error-message, .success-message {
+.error-message,
+.success-message {
   animation: slideIn 0.3s ease-out;
 }
 
