@@ -141,17 +141,15 @@ const validateReason = (blur) => {
 </script>
 
 <template>
-  <!-- 🗄️ W5. Library Registration Form -->
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <h1 class="text-center">🗄️ Registrator</h1>
-        <p class="text-center">
-          Register to become a member of our mental community.
-        </p>
-        
-        
-        <form @submit.prevent="submitForm">
+  <div class="registration-page">
+    <div class="container">
+      <div class="registration-header">
+        <h1>🌟 Join Our Mental Health Community</h1>
+        <p>Register to access personalized mental health resources and connect with our supportive community.</p>
+      </div>
+      
+      <div class="registration-form-container">
+        <form @submit.prevent="submitForm" class="modern-form">
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <label for="username" class="form-label">Username</label>
@@ -166,7 +164,7 @@ const validateReason = (blur) => {
               />
               <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
             </div>
-
+    
             <div class="col-md-6 col-sm-6">
               <label for="gender" class="form-label">Gender</label>
               <select class="form-select" id="gender" v-model="formData.gender" required>
@@ -177,7 +175,7 @@ const validateReason = (blur) => {
               </select>
             </div>
           </div>
-
+    
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <label for="password" class="form-label">Password</label>
@@ -192,7 +190,7 @@ const validateReason = (blur) => {
               />
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
-
+    
             <div class="col-md-6 col-sm-6">
               <label for="confirm-password" class="form-label">Confirm password</label>
               <input
@@ -209,7 +207,7 @@ const validateReason = (blur) => {
               </div>
             </div>
           </div>
-
+    
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <div class="form-check">
@@ -223,6 +221,7 @@ const validateReason = (blur) => {
               </div>
             </div>
           </div>
+          
           <div class="mb-3">
             <label for="reason" class="form-label">Reason for joining</label>
             <textarea
@@ -235,10 +234,12 @@ const validateReason = (blur) => {
             ></textarea>
             <div v-if="errors.reason" class="text-success mt-1">{{ errors.reason }}</div>
           </div>
+          
           <div class="mb-3">
             <label for="suburb" class="form-label">Suburb</label>
             <input type="text" class="form-control" id="suburb" v-model="formData.suburb" />
           </div>
+          
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -250,45 +251,122 @@ const validateReason = (blur) => {
 </template>
 
 <style scoped>
+.registration-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem 0;
+}
+
 .container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 80vw;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
-.form {
+.registration-header {
   text-align: center;
-  margin-top: 50px;
-}
-
-#username:focus,
-#password:focus,
-#isAustralian:focus,
-.card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card-header {
-  background-color: #275fda;
+  padding: 3rem 2rem 2rem;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
   color: white;
-  padding: 10px;
-  border-radius: 10px 10px 0 0;
+  margin: -2rem -2rem 2rem -2rem;
 }
 
-.list-group-item {
-  padding: 10px;
+.registration-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.text-primary {
-  color: #007bff !important;
-  text-decoration: none;
+.registration-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.text-primary:hover {
-  text-decoration: underline;
+.registration-form-container {
+  padding: 0 2rem 2rem;
+}
+
+.modern-form {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.form-group {
+  position: relative;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-control, .form-select {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.text-danger {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.text-success {
+  color: #10b981;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .registration-header h1 {
+    font-size: 2rem;
+  }
+  
+  .container {
+    margin: 1rem;
+    border-radius: 16px;
+  }
 }
 </style>
