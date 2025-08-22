@@ -42,7 +42,7 @@ const submitForm = () => {
   validateName(true)
   validatePassword(true)
   validateConfirmPassword(true)
-  
+
   if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword) {
 
     const existingUser = submittedCards.value.find(user => user.username === formData.value.username)
@@ -50,16 +50,16 @@ const submitForm = () => {
       errors.value.username = 'Username already exists. Please choose a different one.'
       return
     }
-    
+
 
     submittedCards.value.push({ ...formData.value })
-    
+
 
     saveSubmittedData()
-    
+
 
     // alert(`Registration successful! You can now login with username: ${formData.value.username}`)
-    
+
 
     clearForm()
   }
@@ -147,7 +147,7 @@ const validateReason = (blur) => {
         <h1>🌟 Join Our Mental Health Community</h1>
         <p>Register to access personalized mental health resources and connect with our supportive community.</p>
       </div>
-      
+
       <div class="registration-form-container">
         <form @submit.prevent="submitForm" class="modern-form">
           <div class="row mb-3">
@@ -164,7 +164,7 @@ const validateReason = (blur) => {
               />
               <div v-if="errors.username" class="text-danger">{{ errors.username }}</div>
             </div>
-    
+
             <div class="col-md-6 col-sm-6">
               <label for="gender" class="form-label">Gender</label>
               <select class="form-select" id="gender" v-model="formData.gender" required>
@@ -175,7 +175,7 @@ const validateReason = (blur) => {
               </select>
             </div>
           </div>
-    
+
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <label for="password" class="form-label">Password</label>
@@ -190,7 +190,7 @@ const validateReason = (blur) => {
               />
               <div v-if="errors.password" class="text-danger">{{ errors.password }}</div>
             </div>
-    
+
             <div class="col-md-6 col-sm-6">
               <label for="confirm-password" class="form-label">Confirm password</label>
               <input
@@ -207,7 +207,7 @@ const validateReason = (blur) => {
               </div>
             </div>
           </div>
-    
+
           <div class="row mb-3">
             <div class="col-md-6 col-sm-6">
               <div class="form-check">
@@ -221,7 +221,7 @@ const validateReason = (blur) => {
               </div>
             </div>
           </div>
-          
+
           <div class="mb-3">
             <label for="reason" class="form-label">Reason for joining</label>
             <textarea
@@ -234,12 +234,12 @@ const validateReason = (blur) => {
             ></textarea>
             <div v-if="errors.reason" class="text-success mt-1">{{ errors.reason }}</div>
           </div>
-          
+
           <div class="mb-3">
             <label for="suburb" class="form-label">Suburb</label>
             <input type="text" class="form-control" id="suburb" v-model="formData.suburb" />
           </div>
-          
+
           <div class="text-center">
             <button type="submit" class="btn btn-primary me-2">Submit</button>
             <button type="button" class="btn btn-secondary" @click="clearForm">Clear</button>
@@ -363,7 +363,7 @@ const validateReason = (blur) => {
   .registration-header h1 {
     font-size: 2rem;
   }
-  
+
   .container {
     margin: 1rem;
     border-radius: 16px;

@@ -3,7 +3,7 @@
     <h2>Evaluate</h2>
 
     <div class="average-rating">
-      Average score: 
+      Average score:
       <strong>{{ averageScore.toFixed(1) }}</strong> / 5
       <span v-if="ratings.length === 0"></span>
     </div>
@@ -195,12 +195,12 @@ button:active {
     padding: 2rem 1.5rem;
     margin: 1rem;
   }
-  
+
   .stars {
     font-size: 2.5rem;
     gap: 0.25rem;
   }
-  
+
   .average-rating {
     font-size: 1.3rem;
   }
@@ -210,11 +210,11 @@ button:active {
   .rating-container {
     padding: 1.5rem 1rem;
   }
-  
+
   .stars {
     font-size: 2rem;
   }
-  
+
   button {
     padding: 0.875rem 1.5rem;
     font-size: 1rem;

@@ -11,18 +11,30 @@
             <span>Home</span>
           </router-link>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <router-link to="/" class="nav-link" active-class="active">
             <i class="icon">📝</i>
-            <span>Register</span>
+            <span>Firebase Register</span>
+          </router-link>
+        </li> -->
+        <li class="nav-item">
+          <router-link to="/Fireregister" class="nav-link" active-class="active">
+            <i class="icon">📝</i>
+            <span>Firebase Register</span>
           </router-link>
         </li>
         <li class="nav-item">
+          <router-link to="/Firelogin" class="nav-link" active-class="active">
+            <i class="icon">🔐</i>
+            <span>Firebase Login</span>
+          </router-link>
+        </li>
+        <!-- <li class="nav-item">
           <router-link to="/login" class="nav-link" active-class="active">
             <i class="icon">🔐</i>
             <span>Login</span>
           </router-link>
-        </li>
+        </li> -->
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">
             <i class="icon">📊</i>
@@ -125,12 +137,12 @@
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .nav-menu {
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .nav-link span {
     display: none;
   }

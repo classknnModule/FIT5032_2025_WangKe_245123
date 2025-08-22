@@ -37,7 +37,7 @@ const router = useRouter()
 const logout = () => {
   localStorage.removeItem('isAuthenticated')
   localStorage.removeItem('currentUser')
-  
+
   router.push('/login')
 }
 </script>
@@ -163,20 +163,20 @@ const logout = () => {
   .dashboard-container {
     padding: 1rem;
   }
-  
+
   .dashboard-header h1 {
     font-size: 2.5rem;
   }
-  
+
   .dashboard-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
-  
+
   .metric-card {
     padding: 2rem 1.5rem;
   }
-  
+
   .metric-value {
     font-size: 2rem;
   }
@@ -186,15 +186,15 @@ const logout = () => {
   .dashboard-header h1 {
     font-size: 2rem;
   }
-  
+
   .metric-card {
     padding: 1.5rem 1rem;
   }
-  
+
   .metric-card h3 {
     font-size: 1.3rem;
   }
-  
+
   .metric-value {
     font-size: 1.8rem;
   }

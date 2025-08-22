@@ -60,22 +60,6 @@
           <span v-else>Login</span>
         </button>
       </form>
-
-      <div class="demo-credentials" v-if="registeredUsers.length === 0">
-        <h3>Demo Credentials</h3>
-
-        <div class="credential-group">
-          <h4>Regular User (Librarian)</h4>
-          <p><strong>Username:</strong> librarian</p>
-          <p><strong>Password:</strong> Books123!</p>
-        </div>
-
-        <div class="credential-group">
-          <h4>Administrator</h4>
-          <p><strong>Username:</strong> admin</p>
-          <p><strong>Password:</strong> 12345678</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -108,6 +92,14 @@ export default {
       reason: 'System Administrator',
     }
 
+    const DEFAULT_USER = {
+      username: 'user',
+      password: '123',
+      gender: 'other',
+      isAustralian: true,
+      reason: 'Default User Account',
+    }
+
     const authState = inject('authState', null)
 
     onMounted(() => {
@@ -136,16 +128,26 @@ export default {
       }, 3000)
     }
 
-    const validateCredentials = (username, password) => {
-      const registeredUser = registeredUsers.value.find(
-        (user) => user.username === username && user.password === password,
-      )
+    const validateCredentials = (username, password, userType) => {
+      // Check registered users and default user (for regular user type)
+      if (userType === 'user') {
+        const registeredUser = registeredUsers.value.find(
+          (user) => user.username === username && user.password === password,
+        )
+        if (registeredUser) {
+          return { isValid: true, user: registeredUser }
+        }
 
-      if (registeredUser) {
-        return { isValid: true, user: registeredUser }
+        // Check default user
+        if (username === DEFAULT_USER.username && password === DEFAULT_USER.password) {
+          return { isValid: true, user: DEFAULT_USER }
+        }
       }
 
-      if (username === DEFAULT_ADMIN.username && password === DEFAULT_ADMIN.password) {
+      // Check admin credentials (only for admin user type)
+      if (userType === 'admin' &&
+          username === DEFAULT_ADMIN.username &&
+          password === DEFAULT_ADMIN.password) {
         return { isValid: true, user: DEFAULT_ADMIN }
       }
 
@@ -165,6 +167,7 @@ export default {
         const validation = validateCredentials(
           credentials.value.username,
           credentials.value.password,
+          credentials.value.userType
         )
 
         if (validation.isValid) {
