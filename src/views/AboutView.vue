@@ -3,6 +3,14 @@
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <h1 class="text-center mb-4">❤ Mental Health Dashboard</h1>
+
+        <!-- Dashboard Actions -->
+        <div class="dashboard-actions mb-4">
+          <button @click="goToEmail" class="email-button">
+            📧 Send Email
+          </button>
+        </div>
+
         <div class="dashboard-grid">
           <div class="dashboard-item">
             <h4>Height:</h4>
@@ -37,8 +45,11 @@ const router = useRouter()
 const logout = () => {
   localStorage.removeItem('isAuthenticated')
   localStorage.removeItem('currentUser')
-
   router.push('/login')
+}
+
+const goToEmail = () => {
+  router.push('/email')
 }
 </script>
 
@@ -198,5 +209,33 @@ const logout = () => {
   .metric-value {
     font-size: 1.8rem;
   }
+}
+
+.dashboard-actions {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.email-button {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.email-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669, #047857);
 }
 </style>

@@ -6,6 +6,7 @@ import MentalHealth from '../views/MentalHealth.vue'
 import Evaluate from '../views/Evaluate.vue'
 import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
+import EmailView from '../views/EmailView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
 const routes = [
@@ -18,6 +19,12 @@ const routes = [
     path: '/about',
     name: 'About',
     component: AboutView,
+    meta: { requiresFirebaseAuth: true }
+  },
+  {
+    path: '/email',
+    name: 'Email',
+    component: EmailView,
     meta: { requiresFirebaseAuth: true }
   },
   {
