@@ -1,150 +1,164 @@
 <template>
-  <nav class="modern-nav">
-    <div class="nav-container">
-      <div class="nav-brand">
-        <h2>🧠 Mental Health Hub</h2>
+  <header role="banner">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
+      <div class="container-fluid">
+        <router-link 
+          class="navbar-brand" 
+          to="/"
+          aria-label="Mental Health Hub - Go to homepage"
+        >
+          Mental Health Hub
+        </router-link>
+        
+        <button 
+          class="navbar-toggler" 
+          type="button" 
+          :aria-expanded="isMenuOpen"
+          aria-controls="navbarNav"
+          aria-label="Toggle navigation menu"
+          @click="toggleMenu"
+          @keydown.enter="toggleMenu"
+          @keydown.space.prevent="toggleMenu"
+        >
+          <span class="navbar-toggler-icon" aria-hidden="true"></span>
+        </button>
+        
+        <div 
+          class="collapse navbar-collapse" 
+          :class="{ show: isMenuOpen }"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0" role="menubar">
+            <li class="nav-item" role="none">
+              <router-link 
+                class="nav-link" 
+                to="/"
+                role="menuitem"
+                aria-label="Home page"
+                @click="closeMenu"
+              >
+                <span aria-hidden="true">🏠</span> Home
+              </router-link>
+            </li>
+            <li class="nav-item" role="none">
+              <router-link 
+                class="nav-link" 
+                to="/FireRegister"
+                role="menuitem"
+                aria-label="Register new account"
+                @click="closeMenu"
+              >
+                <span aria-hidden="true">📝</span> Firebase Register
+              </router-link>
+            </li>
+            <li class="nav-item" role="none">
+              <router-link 
+                class="nav-link" 
+                to="/Firelogin"
+                role="menuitem"
+                aria-label="Login to account"
+                @click="closeMenu"
+              >
+                <span aria-hidden="true">🔐</span> Firebase Login
+              </router-link>
+            </li>
+            <li class="nav-item" role="none">
+              <router-link 
+                class="nav-link" 
+                to="/about"
+                role="menuitem"
+                aria-label="Dashboard and user information"
+                @click="closeMenu"
+              >
+                <span aria-hidden="true">📊</span> Dashboard
+              </router-link>
+            </li>
+            <li class="nav-item" role="none">
+              <router-link 
+                class="nav-link" 
+                to="/evaluate"
+                role="menuitem"
+                aria-label="Mental health evaluation"
+                @click="closeMenu"
+              >
+                <span aria-hidden="true">⭐</span> Evaluate
+              </router-link>
+            </li>
+          </ul>
+        </div>
       </div>
-      <ul class="nav-menu">
-        <li class="nav-item">
-          <router-link to="/mental" class="nav-link" active-class="active">
-            <i class="icon">🏠</i>
-            <span>Home</span>
-          </router-link>
-        </li>
-        <!-- <li class="nav-item">
-          <router-link to="/" class="nav-link" active-class="active">
-            <i class="icon">📝</i>
-            <span>Firebase Register</span>
-          </router-link>
-        </li> -->
-        <li class="nav-item">
-          <router-link to="/Fireregister" class="nav-link" active-class="active">
-            <i class="icon">📝</i>
-            <span>Firebase Register</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/Firelogin" class="nav-link" active-class="active">
-            <i class="icon">🔐</i>
-            <span>Firebase Login</span>
-          </router-link>
-        </li>
-        <!-- <li class="nav-item">
-          <router-link to="/login" class="nav-link" active-class="active">
-            <i class="icon">🔐</i>
-            <span>Login</span>
-          </router-link>
-        </li> -->
-        <li class="nav-item">
-          <router-link to="/about" class="nav-link" active-class="active">
-            <i class="icon">📊</i>
-            <span>Dashboard</span>
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/evaluate" class="nav-link" active-class="active">
-            <i class="icon">⭐</i>
-            <span>Evaluate</span>
-          </router-link>
-        </li>
-      </ul>
+    </nav>
+    
+    <div class="skip-links">
+      <a href="#main-content" class="skip-link">Skip to main content</a>
+      <a href="#navigation" class="skip-link">Skip to navigation</a>
     </div>
-  </nav>
+  </header>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+import { AccessibilityUtils } from '@/utils/accessibility'
+
+const isMenuOpen = ref(false)
+
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+  AccessibilityUtils.announceToScreenReader(
+    isMenuOpen.value ? 'Navigation menu opened' : 'Navigation menu closed'
+  )
+}
+
+const closeMenu = () => {
+  isMenuOpen.value = false
+}
+</script>
+
 <style scoped>
-.modern-nav {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  position: sticky;
-  top: 0;
+.skip-links {
+  position: absolute;
+  top: -40px;
+  left: 6px;
   z-index: 1000;
 }
 
-.nav-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-brand h2 {
-  margin: 0;
-  background: linear-gradient(135deg, #6366f1, #ec4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  font-size: 1.5rem;
-}
-
-.nav-menu {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 0.5rem;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 50px;
-  text-decoration: none;
-  color: #64748b;
-  font-weight: 500;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.nav-link::before {
-  content: '';
+.skip-link {
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #6366f1, #ec4899);
-  transition: left 0.3s ease;
-  z-index: -1;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 1001;
 }
 
-.nav-link:hover::before,
-.nav-link.active::before {
-  left: 0;
+.skip-link:focus {
+  top: 6px;
 }
 
-.nav-link:hover,
-.nav-link.active {
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+.navbar-toggler:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
 }
 
-.icon {
-  font-size: 1.1rem;
+.nav-link:focus {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  background-color: rgba(0, 102, 204, 0.1);
 }
 
-@media (max-width: 768px) {
-  .nav-container {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .nav-menu {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .nav-link span {
-    display: none;
-  }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

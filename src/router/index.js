@@ -8,10 +8,21 @@ import FirebaseSigninView from '../views/FirebaseSigninView.vue'
 import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 import EmailView from '../views/EmailView.vue'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
+import WeatherView from '@/views/WeatherView.vue'
 
 const routes = [
   {
+    path: '/WeatherCheck',
+    name: 'WeatherCheck',
+    component: WeatherView
+  },
+  {
     path: '/',
+    name: 'Mental',
+    component: MentalHealth
+  },
+  {
+    path: '/home',
     name: 'Home',
     component: HomeView
   },
@@ -41,11 +52,6 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView
-  },
-  {
-    path: '/mental',
-    name: 'Mental',
-    component: MentalHealth
   },
   {
     path: '/evaluate',
