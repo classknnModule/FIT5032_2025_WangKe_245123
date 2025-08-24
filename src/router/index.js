@@ -49,6 +49,16 @@ const routes = [
     component: FirebaseRegisterView
   },
   {
+    path: '/admin-login',
+    name: 'AdminLogin',
+    component: () => import('../components/AdminLogin.vue')
+  },
+  {
+    path: '/admin-dashboard',
+    name: 'AdminDashboard',
+    component: () => import('../components/AdminDashboard.vue')
+  },
+  {
     path: '/login',
     name: 'Login',
     component: LoginView

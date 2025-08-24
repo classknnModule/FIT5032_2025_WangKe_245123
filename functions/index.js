@@ -4,8 +4,71 @@ const {onRequest} = require("firebase-functions/https");
 const logger = require("firebase-functions/logger");
 const admin = require("firebase-admin");
 const nodemailer = require("nodemailer");
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 
-admin.initializeApp();
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+exports.getAuthUsers = functions.https.onCall(async (data, context) => {
+  if (!context.auth) {
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'User must be authenticated'
+    );
+  }
+
+  const adminEmail = 'admin@example.com';
+  if (context.auth.token.email !== adminEmail) {
+    throw new functions.https.HttpsError(
+      'permission-denied',
+      'Only admin can access user data'
+    );
+  }
+
+  try {
+    const listUsersResult = await admin.auth().listUsers(1000);
+    const users = listUsersResult.users.map(userRecord => ({
+      uid: userRecord.uid,
+      email: userRecord.email,
+      emailVerified: userRecord.emailVerified,
+      disabled: userRecord.disabled,
+      creationTime: userRecord.metadata.creationTime,
+      lastSignInTime: userRecord.metadata.lastSignInTime,
+      providerData: userRecord.providerData
+    }));
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const newUsersToday = users.filter(user => {
+      const creationDate = new Date(user.creationTime);
+      return creationDate >= today;
+    }).length;
+
+    const activeUsers = users.filter(user => {
+      if (!user.lastSignInTime) return false;
+      const lastSignIn = new Date(user.lastSignInTime);
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      return lastSignIn >= thirtyDaysAgo;
+    }).length;
+
+    return {
+      totalUsers: users.length,
+      newUsersToday,
+      activeUsers,
+      users: users.slice(0, 50)
+    };
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw new functions.https.HttpsError(
+      'internal',
+      'Error fetching user data'
+    );
+  }
+});
 
 setGlobalOptions({ maxInstances: 10 });
 

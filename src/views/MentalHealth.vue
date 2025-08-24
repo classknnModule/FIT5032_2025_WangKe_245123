@@ -114,6 +114,18 @@
         </div>
       </div>
     </section>
+
+    <!-- Admin Login Section -->
+    <section class="admin-section">
+      <div class="container">
+        <div class="admin-login-link">
+          <router-link to="/admin-login" class="admin-link">
+            <span class="admin-icon">🔐</span>
+            Admin Login
+          </router-link>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -532,6 +544,68 @@ const updateActiveQuote = () => {
 
   .stat-number {
     font-size: 2.5rem;
+  }
+}
+
+/* Admin Section */
+.admin-section {
+  padding: 3rem 0;
+  background: #1f2937;
+  border-top: 3px solid #667eea;
+  margin-top: 2rem;
+}
+
+.admin-login-link {
+  text-align: center;
+}
+
+.admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.admin-link:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.admin-icon {
+  font-size: 1.2rem;
+}
+
+/* Responsive Design for Admin Section */
+@media (max-width: 768px) {
+  .admin-section {
+    padding: 2rem 0;
+  }
+  
+  .admin-link {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-section {
+    padding: 1.5rem 0;
+  }
+  
+  .admin-link {
+    font-size: 0.85rem;
+    padding: 0.7rem 1.2rem;
   }
 }
 </style>

@@ -25,6 +25,14 @@
             <option value="year">This Year</option>
           </select>
         </div>
+        <div class="export-controls">
+          <button @click="exportToCSV" class="export-btn csv-btn">
+            📊 Export CSV
+          </button>
+          <button @click="exportToPDF" class="export-btn pdf-btn">
+            📄 Export PDF
+          </button>
+        </div>
       </div>
     </div>
 
@@ -472,6 +480,93 @@ export default {
         minute: '2-digit',
         hour12: false
       })
+    },
+
+    exportToCSV() {
+      const headers = ['Title', 'Date', 'Time', 'Duration', 'Status', 'Description']
+      const csvContent = [headers.join(',')]
+
+      this.filteredAppointments.forEach(appointment => {
+        const row = [
+          `"${appointment.title}"`,
+          `"${this.formatDate(appointment.start)}"`,
+          `"${this.formatTime(appointment.start)}"`,
+          `"${this.getDuration(appointment)}"`,
+          `"${this.getStatus(appointment)}"`,
+          `"${this.getDescription(appointment)}"`
+        ]
+        csvContent.push(row.join(','))
+      })
+
+      const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', `appointments_${new Date().toISOString().split('T')[0]}.csv`)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    },
+
+    async exportToPDF() {
+      try {
+        const { jsPDF } = await import('jspdf')
+        const html2canvas = (await import('html2canvas')).default
+
+        const pdf = new jsPDF()
+        const pageWidth = pdf.internal.pageSize.getWidth()
+        const pageHeight = pdf.internal.pageSize.getHeight()
+
+        pdf.setFontSize(16)
+        pdf.text('Appointment Records', pageWidth / 2, 20, { align: 'center' })
+
+        let yPosition = 40
+        const lineHeight = 8
+        const margin = 20
+
+        pdf.setFontSize(10)
+        const headers = ['Title', 'Date', 'Time', 'Duration', 'Status']
+        const colWidths = [50, 30, 25, 25, 25]
+        let xPosition = margin
+
+        headers.forEach((header, index) => {
+          pdf.text(header, xPosition, yPosition)
+          xPosition += colWidths[index]
+        })
+
+        yPosition += lineHeight
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition)
+        yPosition += 5
+
+        this.filteredAppointments.forEach(appointment => {
+          if (yPosition > pageHeight - 30) {
+            pdf.addPage()
+            yPosition = 20
+          }
+
+          xPosition = margin
+          const rowData = [
+            appointment.title.substring(0, 20),
+            this.formatDate(appointment.start),
+            this.formatTime(appointment.start),
+            this.getDuration(appointment),
+            this.getStatus(appointment)
+          ]
+
+          rowData.forEach((data, index) => {
+            pdf.text(data, xPosition, yPosition)
+            xPosition += colWidths[index]
+          })
+
+          yPosition += lineHeight
+        })
+
+        pdf.save(`appointments_${new Date().toISOString().split('T')[0]}.pdf`)
+      } catch (error) {
+        console.error('Error exporting PDF:', error)
+        alert('Error exporting PDF. Please make sure jsPDF is installed.')
+      }
     }
   }
 }
@@ -550,6 +645,47 @@ export default {
 .filter-controls {
   display: flex;
   gap: 12px;
+}
+
+.export-controls {
+  display: flex;
+  gap: 10px;
+  margin-left: 15px;
+}
+
+.export-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.csv-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.csv-btn:hover {
+  background: linear-gradient(135deg, #218838, #1ea085);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.pdf-btn {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  color: white;
+}
+
+.pdf-btn:hover {
+  background: linear-gradient(135deg, #c82333, #dc2626);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 .status-filter,
@@ -743,6 +879,17 @@ export default {
 
   .filter-controls {
     justify-content: space-between;
+  }
+
+  .export-controls {
+    flex-direction: column;
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .export-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .column-search-row {

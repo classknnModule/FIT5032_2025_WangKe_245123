@@ -12,35 +12,35 @@
       <form @submit.prevent="bookAppointment">
         <div class="form-group">
           <label for="title">Appointment Title:</label>
-          <input 
+          <input
             id="title"
-            v-model="newAppointment.title" 
-            type="text" 
-            required 
+            v-model="newAppointment.title"
+            type="text"
+            required
             placeholder="Enter appointment title"
           >
         </div>
-        
+
         <div class="form-group">
           <label for="date">Date:</label>
-          <input 
+          <input
             id="date"
-            v-model="newAppointment.date" 
-            type="date" 
+            v-model="newAppointment.date"
+            type="date"
             required
           >
         </div>
-        
+
         <div class="form-group">
           <label for="time">Time:</label>
-          <input 
+          <input
             id="time"
-            v-model="newAppointment.time" 
-            type="time" 
+            v-model="newAppointment.time"
+            type="time"
             required
           >
         </div>
-        
+
         <div class="form-group">
           <label for="duration">Duration (minutes):</label>
           <select id="duration" v-model="newAppointment.duration" required>
@@ -50,16 +50,16 @@
             <option value="120">2 hours</option>
           </select>
         </div>
-        
+
         <div class="form-group">
           <label for="description">Description:</label>
-          <textarea 
+          <textarea
             id="description"
-            v-model="newAppointment.description" 
+            v-model="newAppointment.description"
             placeholder="Enter appointment description"
           ></textarea>
         </div>
-        
+
         <div class="form-actions">
           <button type="submit" class="btn-primary">Book Appointment</button>
           <button type="button" @click="resetForm" class="btn-secondary">Reset</button>
@@ -84,9 +84,9 @@
         No appointments scheduled
       </div>
       <div v-else class="appointment-cards">
-        <div 
-          v-for="appointment in upcomingAppointments" 
-          :key="appointment.id" 
+        <div
+          v-for="appointment in upcomingAppointments"
+          :key="appointment.id"
           class="appointment-card"
         >
           <div class="appointment-header">
@@ -170,29 +170,29 @@ export default {
       this.newAppointment.date = selectedDate
       this.showBookingForm = true
     },
-    
+
     handleEventClick(clickInfo) {
       if (confirm(`Delete appointment '${clickInfo.event.title}'?`)) {
         this.cancelAppointment(clickInfo.event.id)
       }
     },
-    
+
     handleEventDrop(dropInfo) {
       this.updateAppointmentTime(dropInfo.event)
     },
-    
+
     handleEventResize(resizeInfo) {
       this.updateAppointmentTime(resizeInfo.event)
     },
-    
+
     bookAppointment() {
       if (!this.validateAppointment()) {
         return
       }
-      
+
       const startDateTime = new Date(`${this.newAppointment.date}T${this.newAppointment.time}`)
       const endDateTime = new Date(startDateTime.getTime() + (this.newAppointment.duration * 60000))
-      
+
       if (this.checkConflict(startDateTime, endDateTime)) {
         this.conflictMessage = 'Appointment conflicts with existing booking. Please choose a different time.'
         setTimeout(() => {
@@ -200,7 +200,7 @@ export default {
         }, 5000)
         return
       }
-      
+
       const appointment = {
         id: Date.now().toString(),
         title: this.newAppointment.title,
@@ -213,16 +213,16 @@ export default {
           duration: this.newAppointment.duration
         }
       }
-      
+
       this.appointments.push(appointment)
       this.saveAppointments()
       this.updateCalendarEvents()
       this.resetForm()
       this.showBookingForm = false
-      
+
       alert('Appointment booked successfully!')
     },
-    
+
     validateAppointment() {
       if (!this.newAppointment.title.trim()) {
         alert('Please enter appointment title')
@@ -236,27 +236,27 @@ export default {
         alert('Please select a time')
         return false
       }
-      
+
       const selectedDateTime = new Date(`${this.newAppointment.date}T${this.newAppointment.time}`)
       const now = new Date()
-      
+
       if (selectedDateTime <= now) {
         alert('Please select a future date and time')
         return false
       }
-      
+
       return true
     },
-    
+
     checkConflict(startTime, endTime) {
       return this.appointments.some(apt => {
         const aptStart = new Date(apt.start)
         const aptEnd = new Date(apt.end)
-        
+
         return (startTime < aptEnd && endTime > aptStart)
       })
     },
-    
+
     cancelAppointment(appointmentId) {
       if (confirm('Are you sure you want to cancel this appointment?')) {
         this.appointments = this.appointments.filter(apt => apt.id !== appointmentId)
@@ -264,7 +264,7 @@ export default {
         this.updateCalendarEvents()
       }
     },
-    
+
     updateAppointmentTime(event) {
       const appointment = this.appointments.find(apt => apt.id === event.id)
       if (appointment) {
@@ -273,7 +273,7 @@ export default {
         this.saveAppointments()
       }
     },
-    
+
     resetForm() {
       this.newAppointment = {
         title: '',
@@ -284,26 +284,26 @@ export default {
       }
       this.conflictMessage = ''
     },
-    
+
     updateCalendarEvents() {
       this.calendarOptions.events = [...this.appointments]
     },
-    
+
     loadAppointments() {
       const saved = localStorage.getItem('appointments')
       if (saved) {
         this.appointments = JSON.parse(saved)
       }
     },
-    
+
     saveAppointments() {
       localStorage.setItem('appointments', JSON.stringify(this.appointments))
     },
-    
+
     formatDate(dateString) {
       return new Date(dateString).toLocaleDateString()
     },
-    
+
     formatTime(dateString) {
       return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
@@ -489,11 +489,11 @@ export default {
     gap: 10px;
     align-items: stretch;
   }
-  
+
   .form-actions {
     flex-direction: column;
   }
-  
+
   .appointment-header {
     flex-direction: column;
     align-items: stretch;

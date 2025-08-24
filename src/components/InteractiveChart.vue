@@ -15,6 +15,14 @@
           placeholder="Search..."
           class="search-input"
         />
+        <div class="export-controls">
+          <button @click="exportToCSV" class="export-btn csv-btn">
+            📊 Export CSV
+          </button>
+          <button @click="exportToPDF" class="export-btn pdf-btn">
+            📄 Export PDF
+          </button>
+        </div>
       </div>
     </div>
 
@@ -101,16 +109,16 @@
         Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ filteredData.length }} entries
       </div>
       <div class="pagination-controls">
-        <button 
-          @click="goToPage(currentPage - 1)" 
+        <button
+          @click="goToPage(currentPage - 1)"
           :disabled="currentPage === 1"
           class="pagination-btn"
         >
           Previous
         </button>
         <span class="pagination-pages">
-          <button 
-            v-for="page in visiblePages" 
+          <button
+            v-for="page in visiblePages"
             :key="page"
             @click="goToPage(page)"
             :class="['pagination-btn', { 'active': page === currentPage }]"
@@ -118,8 +126,8 @@
             {{ page }}
           </button>
         </span>
-        <button 
-          @click="goToPage(currentPage + 1)" 
+        <button
+          @click="goToPage(currentPage + 1)"
           :disabled="currentPage === totalPages"
           class="pagination-btn"
         >
@@ -262,35 +270,35 @@ export default {
     totalPages() {
       return Math.ceil(this.filteredData.length / this.itemsPerPage)
     },
-    
+
     paginatedData() {
       const start = (this.currentPage - 1) * this.itemsPerPage
       const end = start + this.itemsPerPage
       return this.filteredData.slice(start, end)
     },
-    
+
     startIndex() {
       return (this.currentPage - 1) * this.itemsPerPage
     },
-    
+
     endIndex() {
       return Math.min(this.startIndex + this.itemsPerPage, this.filteredData.length)
     },
-    
+
     visiblePages() {
       const pages = []
       const maxVisible = 5
       let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2))
       let end = Math.min(this.totalPages, start + maxVisible - 1)
-      
+
       if (end - start + 1 < maxVisible) {
         start = Math.max(1, end - maxVisible + 1)
       }
-      
+
       for (let i = start; i <= end; i++) {
         pages.push(i)
       }
-      
+
       return pages
     }
   },
@@ -473,6 +481,89 @@ export default {
         exerciseTime: 0,
         sleepTime: 0
       }
+    },
+
+    exportToCSV() {
+      const headers = ['Date', 'Mood', 'Exercise Time (h)', 'Sleep Time (h)']
+      const csvContent = [headers.join(',')]
+
+      this.paginatedData.forEach(record => {
+        const row = [
+          `"${this.formatDate(record.date)}"`,
+          `"${record.mood}"`,
+          `"${record.exerciseTime}"`,
+          `"${record.sleepTime}"`
+        ]
+        csvContent.push(row.join(','))
+      })
+
+      const blob = new Blob([csvContent.join('\n')], { type: 'text/csv;charset=utf-8;' })
+      const link = document.createElement('a')
+      const url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', `health_records_${new Date().toISOString().split('T')[0]}.csv`)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    },
+
+    async exportToPDF() {
+      try {
+        const { jsPDF } = await import('jspdf')
+
+        const pdf = new jsPDF()
+        const pageWidth = pdf.internal.pageSize.getWidth()
+        const pageHeight = pdf.internal.pageSize.getHeight()
+
+        pdf.setFontSize(16)
+        pdf.text('Health Records', pageWidth / 2, 20, { align: 'center' })
+
+        let yPosition = 40
+        const lineHeight = 8
+        const margin = 20
+
+        pdf.setFontSize(10)
+        const headers = ['Date', 'Mood', 'Exercise (h)', 'Sleep (h)']
+        const colWidths = [40, 30, 35, 35]
+        let xPosition = margin
+
+        headers.forEach((header, index) => {
+          pdf.text(header, xPosition, yPosition)
+          xPosition += colWidths[index]
+        })
+
+        yPosition += lineHeight
+        pdf.line(margin, yPosition, pageWidth - margin, yPosition)
+        yPosition += 5
+
+        this.paginatedData.forEach(record => {
+          if (yPosition > pageHeight - 30) {
+            pdf.addPage()
+            yPosition = 20
+          }
+
+          xPosition = margin
+          const rowData = [
+            this.formatDate(record.date),
+            record.mood,
+            record.exerciseTime.toString(),
+            record.sleepTime.toString()
+          ]
+
+          rowData.forEach((data, index) => {
+            pdf.text(data, xPosition, yPosition)
+            xPosition += colWidths[index]
+          })
+
+          yPosition += lineHeight
+        })
+
+        pdf.save(`health_records_${new Date().toISOString().split('T')[0]}.pdf`)
+      } catch (error) {
+        console.error('Error exporting PDF:', error)
+        alert('Error exporting PDF. Please make sure jsPDF is installed.')
+      }
     }
   }
 }
@@ -512,6 +603,46 @@ export default {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.export-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.export-btn {
+  padding: 10px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.export-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.csv-btn:hover {
+  background: rgba(40, 167, 69, 0.8);
+  border-color: #28a745;
+}
+
+.pdf-btn:hover {
+  background: rgba(220, 53, 69, 0.8);
+  border-color: #dc3545;
 }
 
 .table-select,
@@ -711,36 +842,36 @@ export default {
     align-items: stretch;
     gap: 16px;
   }
-  
+
   .table-controls {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .search-input {
     min-width: auto;
   }
-  
+
   .column-search-row {
     display: none;
   }
-  
+
   .pagination-container {
     flex-direction: column;
     gap: 16px;
     text-align: center;
   }
-  
+
   .pagination-controls {
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .table-stats {
     flex-wrap: wrap;
     gap: 16px;
   }
-  
+
   .stat-item {
     min-width: 100px;
   }

@@ -2,17 +2,17 @@
   <header role="banner">
     <nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation" aria-label="Main navigation">
       <div class="container-fluid">
-        <router-link 
-          class="navbar-brand" 
+        <router-link
+          class="navbar-brand"
           to="/"
           aria-label="Mental Health Hub - Go to homepage"
         >
           Mental Health Hub
         </router-link>
-        
-        <button 
-          class="navbar-toggler" 
-          type="button" 
+
+        <button
+          class="navbar-toggler"
+          type="button"
           :aria-expanded="isMenuOpen"
           aria-controls="navbarNav"
           aria-label="Toggle navigation menu"
@@ -22,16 +22,16 @@
         >
           <span class="navbar-toggler-icon" aria-hidden="true"></span>
         </button>
-        
-        <div 
-          class="collapse navbar-collapse" 
+
+        <div
+          class="collapse navbar-collapse"
           :class="{ show: isMenuOpen }"
           id="navbarNav"
         >
           <ul class="navbar-nav me-auto mb-2 mb-lg-0" role="menubar">
             <li class="nav-item" role="none">
-              <router-link 
-                class="nav-link" 
+              <router-link
+                class="nav-link"
                 to="/"
                 role="menuitem"
                 aria-label="Home page"
@@ -41,8 +41,8 @@
               </router-link>
             </li>
             <li class="nav-item" role="none">
-              <router-link 
-                class="nav-link" 
+              <router-link
+                class="nav-link"
                 to="/FireRegister"
                 role="menuitem"
                 aria-label="Register new account"
@@ -52,8 +52,8 @@
               </router-link>
             </li>
             <li class="nav-item" role="none">
-              <router-link 
-                class="nav-link" 
+              <router-link
+                class="nav-link"
                 to="/Firelogin"
                 role="menuitem"
                 aria-label="Login to account"
@@ -63,8 +63,8 @@
               </router-link>
             </li>
             <li class="nav-item" role="none">
-              <router-link 
-                class="nav-link" 
+              <router-link
+                class="nav-link"
                 to="/about"
                 role="menuitem"
                 aria-label="Dashboard and user information"
@@ -74,8 +74,8 @@
               </router-link>
             </li>
             <li class="nav-item" role="none">
-              <router-link 
-                class="nav-link" 
+              <router-link
+                class="nav-link"
                 to="/evaluate"
                 role="menuitem"
                 aria-label="Mental health evaluation"
@@ -88,7 +88,7 @@
         </div>
       </div>
     </nav>
-    
+
     <div class="skip-links">
       <a href="#main-content" class="skip-link">Skip to main content</a>
       <a href="#navigation" class="skip-link">Skip to navigation</a>
