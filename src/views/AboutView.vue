@@ -1,7 +1,7 @@
 <template>
   <div class="about">
     <h1>Mental Health Dashboard</h1>
-    
+
     <div class="dashboard-grid">
       <div class="dashboard-section">
         <h2>Health Metrics</h2>
@@ -24,7 +24,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="dashboard-section">
         <h2>Quick Actions</h2>
         <div class="actions-grid">
@@ -32,12 +32,24 @@
           <button @click="logout" class="logout-btn">Logout</button>
         </div>
       </div>
-      
+
       <div class="dashboard-section full-width">
         <h2>Appointment System</h2>
         <AppointmentBooking />
       </div>
-      
+
+      <div class="dashboard-section full-width">
+        <h2>Appointment Records</h2>
+        <AppointmentTable />
+      </div>
+
+      <div class="dashboard-section full-width">
+        <InteractiveChart
+          title="Health Metrics Tracking"
+          :dataType="'combined'"
+        />
+      </div>
+
       <div class="dashboard-section full-width">
         <h2>Location Services</h2>
         <MapComponent />
@@ -47,15 +59,20 @@
 </template>
 
 <script>
-import { getAuth, signOut } from 'firebase/auth'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/firebase/init'
 import AppointmentBooking from '@/components/AppointmentBooking.vue'
+import AppointmentTable from '@/components/AppointmentTable.vue'
 import MapComponent from '@/components/MapComponent.vue'
+import InteractiveChart from '@/components/InteractiveChart.vue'
 
 export default {
   name: 'AboutView',
   components: {
     AppointmentBooking,
-    MapComponent
+    AppointmentTable,
+    MapComponent,
+    InteractiveChart
   },
   data() {
     return {
@@ -71,9 +88,8 @@ export default {
     },
     async logout() {
       try {
-        const auth = getAuth()
         await signOut(auth)
-        this.$router.push('/login')
+        this.$router.push('/Firelogin')
       } catch (error) {
         console.error('Logout error:', error)
         alert('Logout failed. Please try again.')
@@ -195,11 +211,11 @@ export default {
   .dashboard-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .metrics-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .about h1 {
     font-size: 2rem;
   }
